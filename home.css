@@ -1,0 +1,36 @@
+nav{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.home-nav_right{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: black;
+}
+
+.home-nav_left{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.home-nav_right div, .home-nav_left div, .home-nav_left p, .home-nav_right p{
+    margin: 1rem 1.5rem;
+}
+
+.home-nav_right div a, .home-nav_left div a, .home-nav_left p a, .home-nav_right p a{
+    text-decoration: none;
+    color: color;
+}
+
+.home-nav_right div:hover, .home-nav_left div:hover{
+    border-bottom: 2px solid red;
+}
+
+.home-nav_left p{
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+    

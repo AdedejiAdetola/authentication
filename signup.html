@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+</head>
+<body>
+
+    <div class="signup-container">
+        <div class="signup-body">
+            <h3 class="signup-head">Sign Up</h3>
+        
+            <div class="input-field">
+                <label for="firstName">First Name</label>
+                <input type="text" placeholder="firstName" id="firstName">
+            </div>
+            <div class="input-field">
+                <label for="lastName">Last Name</label>
+                <input type="text" placeholder="lastName" id="lastName">
+            </div>
+            <div class="input-field">
+                <label for="email">E-mail</label>
+                <input type="e-mail" placeholder="E-mail" id="email">
+            </div>
+            <div class="input-field">
+                <label for="username">Username</label>
+                <input type="text" placeholder="Username" id="username">
+            </div>
+            <div class="input-field">
+                <label for="password">Password</label>
+                <input type="password" placeholder="password" id="password">
+            </div>
+            <div class="signup-btn">
+                <button id="sub_btn">Sign Up</button>
+            </div>
+            
+            <a href="login.html">Already Have An Account?</a>
+        </div>
+    </div>
+
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.3/firebase-app.js";
+        // TODO: Add SDKs for Firebase products that you want to use
+        // https://firebase.google.com/docs/web/setup#available-libraries
+      
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+          apiKey: "AIzaSyBZsvwca7r8PK-dbSIO6j4N6mWIyQqTKMs",
+          authDomain: "zuri-firebase.firebaseapp.com",
+          databaseURL: "https://zuri-firebase-default-rtdb.firebaseio.com",
+          projectId: "zuri-firebase",
+          storageBucket: "zuri-firebase.appspot.com",
+          messagingSenderId: "217176026646",
+          appId: "1:217176026646:web:9e5e75b1439a8a6f018f37"
+        };
+      
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        import { getDatabase, ref, set, child, get } from "https://www.gstatic.com/firebasejs/9.6.3/firebase-database.js";
+
+        const db = getDatabase();
+
+        // .............................................THE REFERENCES..............//
+
+        const fname = document.getElementById('firstName');
+        const lname = document.getElementById('lastName');
+        const email = document.getElementById('email');
+        const username = document.getElementById('username');
+        const password = document.getElementById('password');
+        const submit = document.getElementById('sub_btn');
+
+
+
+        //------------------VALIDATION-----------------------------//
+
+        function isEmptyOrSpaces(str){
+            return str === null || str.match(/^ *$/) !== null;
+        }
+        function Validation(){
+            let nameregex = /^[a-zA-Z\s]+$/;
+            let Email = /^[a-zA-Z0-9]+@(gmail|yahoo|outlook)\.com$/;
+            let userregex = /^[a-zA-Z0-9]{5,}$/;
+
+            if(isEmptyOrSpaces(fname.value) || isEmptyOrSpaces(lname.value) || isEmptyOrSpaces(email.value) || isEmptyOrSpaces(username.value) || isEmptyOrSpaces(password.value)){
+                alert("Fill up empty fields");
+                return false;
+            }
+
+            if (!nameregex.test(fname.value)) {
+                alert("the first name should contain only letters");
+                return false;
+            }
+
+            if (!nameregex.test(lname.value)) {
+                alert("the first name should contain only letters");
+                return false;
+            }
+
+            if (!Email.test(email.value)) {
+                alert("enter a valid email");
+                return false;
+            }
+
+            if (!userregex.test(fname.value)) {
+                alert("the username should be alphanumeric");
+                return false;
+            }
+
+            return true;
+        }
+
+        //...........................REGISTER USER TO FIREBASE....................//
+
+        function RegisterUser(){
+            if(!Validation()){
+                return;
+            };
+            const dbRef = ref(db);
+
+            get(child(dbRef, "UserList/"+username.value)).then((snapshot)=>{
+                if (snapshot.exists()){
+                    alert("Account already exists!");
+                }
+
+                else{
+                    set(ref(db, "UserList/"+username.value),
+                    {
+                        firstname: fname.value,
+                        lastname: lname.value,
+                        email: email.value,
+                        username: username.value,
+                        password: encPass()
+                    })
+                    .then(()=>{
+                        alert("User added successfully");
+                    })
+                    .catch((error) => {
+                        alert("error"+error);
+                    })
+                }
+            });
+        }
+        //--------------ENCRYPTION--------//
+        function encPass(){
+            var pass12 = CryptoJS.AES.encrypt(password.value, password.value);
+            return pass12.toString();
+        }
+
+        //------------------------ASSIGN EVENTS---------------//
+        submit.addEventListener('click', RegisterUser);
+        
+      </script>
+   
+    
+
+</body>
+</html>

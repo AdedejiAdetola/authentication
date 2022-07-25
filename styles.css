@@ -1,0 +1,25 @@
+*{
+    margin: 0;
+    padding:0;
+}
+.signup-container, .login-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 90vh;
+    width: 100vw;
+}
+.signup-head, .login-head{
+    margin-bottom: 2rem;
+}
+.input-field,.signin-input{
+    margin-bottom: 2rem;
+}
+.signup-btn, .login-btn{
+    margin-bottom: 1rem;
+}
+
+.login-toggle{
+    margin-bottom: 0.5rem;
+}
+

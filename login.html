@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log In</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+</head>
+<body>
+
+    <div class="login-container">
+        <div class="login-body">
+            <h3 class="login-head">Log In</h3>
+            <div class="signin-input">
+                <label for="username">Username</label>
+                <input type="text" placeholder="Username" id="username">
+            </div>
+            <div class="signin-input">
+                <label for="password">Password</label>
+                <input type="password" placeholder="password" id="password">
+            </div>
+
+            <div class="login-toggle">
+                <input type="checkbox" name="toggle-btn" id="toggle-btn" class="toggle-btn-input">
+                <label for="toggle-btn" class="toggle-btn-label">Keep Me Logged In</label>
+            </div>
+
+            <div class="login-btn">
+                <button id="sub_btn">Log In</button>
+            </div>
+            
+            <a href="signup.html">Create New Account</a>
+        </div>
+    </div>
+
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.3/firebase-app.js";
+        // TODO: Add SDKs for Firebase products that you want to use
+        // https://firebase.google.com/docs/web/setup#available-libraries
+      
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+          apiKey: "AIzaSyBZsvwca7r8PK-dbSIO6j4N6mWIyQqTKMs",
+          authDomain: "zuri-firebase.firebaseapp.com",
+          databaseURL: "https://zuri-firebase-default-rtdb.firebaseio.com",
+          projectId: "zuri-firebase",
+          storageBucket: "zuri-firebase.appspot.com",
+          messagingSenderId: "217176026646",
+          appId: "1:217176026646:web:9e5e75b1439a8a6f018f37"
+        };
+      
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        import { getDatabase, ref, set, child, get } from "https://www.gstatic.com/firebasejs/9.6.3/firebase-database.js";
+
+        const db = getDatabase();
+
+        // .............................................THE REFERENCES..............//
+        const username = document.getElementById('username');
+        const password = document.getElementById('password');
+        const submit = document.getElementById('sub_btn');
+
+        //----------------------------------AUTHENTICATION------------------------//
+
+        function AuthenticateUser(){
+            const dbRef = ref(db);
+
+            get(child(dbRef, 'UserList/'+username.value)).then((snapshot) => {
+                
+                if(snapshot.exists()){
+                    alert()
+                    let dbpass = decPass(snapshot.val().password)
+                    if (dbpass == password.value){
+                        login(snapshot.val());
+                    }else{
+                        alert("User does not exist!");
+                    }
+                }
+                
+                else{
+                    alert("username or password is invalid");
+                }
+                //console.log(snapshot.exists());
+            });
+        }
+        
+        //-----------------------------DECRYPTION-------------------------//
+        function decPass(dbpass){
+            var pass12 = CryptoJS.AES.decrypt(dbpass, password.value);
+            return pass12.toString(CryptoJS.enc.Utf8);
+        }
+
+        //-------------------LOGIN---------------------------//
+        function login(user){
+            let keepLoggedIn = document.getElementById('toggle-btn').checked;
+
+            if (!keepLoggedIn){
+                sessionStorage.setItem('user', JSON.stringify(user));
+                window.location = 'home.html';
+            } else {
+                localStorage.setItem('keepLoggedIn', 'yes');
+                localStorage.setItem('user', JSON.stringify(user));
+                window.location = 'home.html';
+            }
+        }
+
+        //------------------------ASSIGN EVENTS---------------//
+        submit.addEventListener('click', AuthenticateUser);
+         
+      </script>
+   
+    
+
+</body>
+</html>
